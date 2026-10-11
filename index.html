@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Galaxy · Entrevista</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Galaxy"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#080808">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--fg:#f2ede4;--red:#e0261b;--mut:#8b857a;--line:#2a2623;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.45 Inter,-apple-system,system-ui,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;z-index:9;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:8;background:radial-gradient(ellipse at 50% 40%,transparent 40%,#000 100%)}
+header{position:sticky;top:0;z-index:5;background:#080808ee;padding:10px 18px 8px;border-bottom:1px solid var(--line)}
+.bar{height:3px;background:var(--line);margin-top:8px}.bar i{display:block;height:100%;background:var(--red);transition:width .4s}
+.tag{font:600 11px Inter;letter-spacing:.25em;text-transform:uppercase;color:var(--red);display:flex;justify-content:space-between}
+main{padding:22px 18px 150px;max-width:640px;margin:auto;animation:in .45s ease}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+h1,h2{font-family:Anton,Impact,'Arial Narrow',sans-serif;font-weight:400;text-transform:uppercase;line-height:.98;margin:0 0 14px}
+h1{font-size:54px}h2{font-size:36px}
+h1 em,h2 em{color:var(--red);font-style:normal}
+.big{font-family:Anton,Impact,sans-serif;font-size:96px;line-height:.8;color:#1d1a18;margin-bottom:6px}
+.q{font-size:24px;line-height:1.25;font-weight:600;margin:6px 0 20px}
+.card{border-left:3px solid var(--red);padding:4px 0 4px 14px;margin:0 0 16px;color:#d9d3c8}
+.mut{color:var(--mut);font-size:14px}
+label.chk{display:flex;gap:14px;align-items:flex-start;padding:14px;border:1px solid var(--line);margin:10px 0;background:#0f0e0d}
+input[type=checkbox]{width:26px;height:26px;accent-color:var(--red);flex:none;margin:0}
+input[type=text],input[type=time],select,textarea{width:100%;background:#0f0e0d;color:var(--fg);border:1px solid var(--line);border-radius:0;padding:14px;font:17px Inter,sans-serif;margin:4px 0 14px}
+textarea{min-height:170px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red)}
+.fl{font:600 11px Inter;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.sc{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}
+.sc button{height:48px;background:#0f0e0d;color:var(--fg);border:1px solid var(--line);font:22px Anton,sans-serif}
+.sc button.on{background:var(--red);border-color:var(--red)}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:7;display:flex;gap:8px;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#080808 30%)}
+nav button,.btn{font:400 19px Anton,sans-serif;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--fg);background:transparent;color:var(--fg);padding:15px 14px;flex:1}
+nav .go,.btn.go{background:var(--red);border-color:var(--red);flex:2}
+nav button:disabled{opacity:.3}
+.btn{width:100%;margin:6px 0}
+.sum{border-top:1px solid var(--line);padding:12px 0;font-size:15px}.sum b{color:var(--red)}
+.sk{color:var(--mut);font-style:italic}
+.mic{width:100%;margin:0 0 8px;font:400 18px Anton,sans-serif;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--red);background:transparent;color:var(--fg);padding:13px}.mic.on{background:var(--red);animation:pl 1.2s infinite}@keyframes pl{50%{opacity:.6}}
+</style></head><body>
+<header><div class="tag"><span id="sec">Galaxy</span><span id="tm"></span></div><div class="bar"><i id="pg"></i></div></header>
+<main id="m"></main>
+<nav id="nv"></nav>
+<script>
+const SECS=[
+{n:'01',name:'Su vida',min:2,q:[
+['Qué te ha traído hoy por aquí?'],
+['Qué es lo que más te preocupa en tu día a día?'],
+['Cómo vives tú el tema de la vivienda? ¿Pagas alquiler, tienes hipoteca, vives con tus padres?']]},
+{n:'02',name:'El sistema actual',min:3,q:[
+['Del 0 al 10, ¿cuánto confías en que los políticos solucionen tus problemas?',1],
+['Qué crees que es lo que falla de verdad: ¿las personas que mandan o la forma en que está montado el sistema?'],
+['Si pudieras cambiar una sola cosa del país mañana, ¿cuál sería?']]},
+{n:'03',name:'Cambiar el sistema',min:4,q:[
+['Si se pudiera diseñar el sistema desde cero, ¿qué tendría que tener sí o sí?'],
+['¿Votarías leyes y decisiones importantes desde el móvil? ¿Qué te daría confianza y qué te daría miedo?'],
+['¿Qué te parece que cada ley nueva se pruebe un tiempo y luego se vote si se mantiene o se quita?'],
+['¿Te fiarías de una inteligencia artificial que analice las propuestas de la gente y explique sus pros y contras, sin decidir? ¿Por qué?'],
+['¿Quién debería decidir: todos votando, gente elegida al azar que estudia el tema a fondo (como un jurado), representantes, o una mezcla?'],
+['¿Qué te haría dedicar una hora a la semana a participar en algo así?']]},
+{n:'04',name:'Romper bandos',min:2,q:[
+['Del 0 (izquierda) al 10 (derecha), ¿dónde te pondrías? (Puede no contestar.)',1],
+['¿Crees que alguien que piensa muy distinto a ti podría sentirse cómodo aquí? ¿Qué haría falta para que sí?'],
+['¿En qué crees que estarías de acuerdo con alguien del otro lado?']]},
+{n:'05',name:'El movimiento',min:2,q:[
+['¿Qué tendría que pasar para que esto no acabe como el 15M?'],
+['¿Qué opinas de las elecciones del 29 de noviembre? ¿Vas a votar?'],
+['¿Conoces a alguien que debería estar aquí y no está? ¿Por qué no viene?']]},
+{n:'06',name:'Tu aportación',min:1,q:[
+['¿Qué añadirías tú a esta entrevista? ¿Qué pregunta falta o cuál sobra?']]},
+{n:'07',name:'Cierre',min:1,q:[
+['¿Quieres añadir algo que no te haya preguntado?'],
+['¿Te gustaría seguir participando? Si dice que sí, pide un contacto, siempre voluntario.']]}];
+const steps=[{t:'intro'},{t:'datos'}];
+let c=0;SECS.forEach((s,si)=>s.q.forEach((q,qi)=>{steps.push({t:'q',id:'q'+(c++),s:si,qi,text:q[0],scale:q[1]})}));
+steps.push({t:'fin'});
+const KEY='entrevista_v1';let st={i:0,chk:[0,0,0],meta:{},a:{},t0:Date.now()};
+try{const r=localStorage.getItem(KEY);if(r)st=JSON.parse(r)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const $=id=>document.getElementById(id);
+const esc=s=>(s||'').replace(/[&<>]/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[x]));
+function nowHM(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function render(){
+stopRec();const s=steps[st.i],m=$('m');m.style.animation='none';m.offsetHeight;m.style.animation='';
+$('pg').style.width=(st.i/(steps.length-1)*100)+'%';
+let h='',sec='Galaxy',nav='';
+if(s.t==='intro'){
+h=`<div class="big">00</div><h1>Escuchar<br>para <em>cambiar</em></h1>
+<div class="card">Hola, soy Galaxy. Estoy hablando con la gente de aquí para entender cómo veis el país y qué cambiaríais. Son unos 15 minutos.</div>
+<div class="card">Es <b>anónima</b>. Puedes saltarte cualquier pregunta o parar cuando quieras.</div>
+<label class="chk"><input type="checkbox" data-c="0" ${st.chk[0]?'checked':''}><span>Ha dado permiso para tomar notas o grabar</span></label>
+<label class="chk"><input type="checkbox" data-c="1" ${st.chk[1]?'checked':''}><span>Le he dicho que es anónima</span></label>
+<label class="chk"><input type="checkbox" data-c="2" ${st.chk[2]?'checked':''}><span>Sabe que puede saltarse cualquier pregunta</span></label>`;
+nav=`<button class="go" id="nx" ${st.chk.every(x=>x)?'':'disabled'}>Empezar →</button>`;
+}else if(s.t==='datos'){
+sec='Antes de empezar';
+const mt=st.meta;if(!mt.hora){mt.hora=nowHM();save()}
+h=`<h2>Datos <em>rápidos</em></h2>
+<div class="fl">Edad aproximada</div><input type="text" inputmode="numeric" data-m="edad" value="${esc(mt.edad)}" placeholder="p. ej. 35">
+<div class="fl">Ocupación</div><input type="text" data-m="ocup" value="${esc(mt.ocup)}">
+<div class="fl">Barrio o ciudad</div><input type="text" data-m="lugar" value="${esc(mt.lugar)}">
+<div class="fl">¿Está acampado?</div><select data-m="camp">${['','Sí','De visita','De paso'].map(o=>`<option ${mt.camp===o?'selected':''}>${o}</option>`).join('')}</select>
+<div class="fl">Hora</div><input type="time" data-m="hora" value="${esc(mt.hora)}">`;
+nav=`<button id="bk">←</button><button class="go" id="nx">Primera pregunta →</button>`;
+}else if(s.t==='q'){
+const S=SECS[s.s],a=st.a[s.id]||{};sec=S.n+' · '+S.name+' · '+S.min+' min';
+h=`<div class="big">${S.n}</div><div class="fl">Pregunta ${s.qi+1} de ${S.q.length}</div><div class="q">${esc(s.text)}</div>`;
+if(s.scale)h+=`<div class="sc">${[0,1,2,3,4,5,6,7,8,9,10].map(n=>`<button data-sc="${n}" class="${a.sc===n?'on':''}">${n}</button>`).join('')}</div>`;
+h+=`<button class="mic" id="mc">🎙 Escuchar y transcribir</button><div class="mut" id="mm" style="margin-bottom:10px"></div><div class="fl">Notas</div><textarea id="nt" placeholder="${a.skip?'Saltada':'Escribe lo que diga…'}">${esc(a.note)}</textarea>`;
+nav=`<button id="bk">←</button><button id="sk">Saltar</button><button class="go" id="nx">Siguiente →</button>`;
+}else{
+sec='Fin';const n=archive();
+h=`<h2>Gracias.<br><em>Entrevista</em> hecha</h2>
+<div class="card">Guardada en este dispositivo ✓ (${n} en total)</div>
+<div class="fl">Transcripción completa (opcional)</div><textarea id="tr" placeholder="Pega aquí la transcripción de la conversación…">${esc(st.trans)}</textarea>
+<button class="btn go" id="d1">Descargar JSON de esta entrevista</button><button class="btn" id="dall">Descargar todas (${n})</button><button class="btn" id="cp">Copiar resumen</button><button class="btn" id="nw">Nueva entrevista</button><div class="mut" id="dm"></div>
+<div class="mut" style="margin:14px 0">Vista previa:</div>`+steps.filter(x=>x.t==='q').map(x=>{const a=st.a[x.id]||{};return`<div class="sum"><b>${SECS[x.s].n}.${x.qi+1}</b> ${esc(x.text)}<br>${a.skip?'<span class="sk">Saltada</span>':esc((a.sc!=null?'['+a.sc+'/10] ':'')+(a.note||'—'))}</div>`}).join('');
+nav=`<button id="bk">← Volver a revisar</button>`;
+}
+m.innerHTML=h;$('sec').textContent=sec;$('nv').innerHTML=nav;bind();window.scrollTo(0,0);save();
+}
+function go(d){st.i=Math.max(0,Math.min(steps.length-1,st.i+d));render()}
+function bind(){
+const g=id=>$(id);
+if(g('nx'))g('nx').onclick=()=>go(1);if(g('bk'))g('bk').onclick=()=>go(-1);
+document.querySelectorAll('[data-c]').forEach(e=>e.onchange=()=>{st.chk[e.dataset.c]=e.checked?1:0;g('nx').disabled=!st.chk.every(x=>x);save()});
+document.querySelectorAll('[data-m]').forEach(e=>e.oninput=()=>{st.meta[e.dataset.m]=e.value;save()});
+const s=steps[st.i];
+if(s.t==='q'){
+const a=st.a[s.id]=st.a[s.id]||{};
+g('nt').oninput=e=>{a.note=e.target.value;a.skip=false;save()};
+const mc=g('mc'),SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){mc.style.display='none';g('mm').textContent='Dictado no disponible aquí. Usa el micrófono del teclado del iPhone en las notas.'}
+else mc.onclick=()=>{if(REC){stopRec();return}
+const r=new SR();r.lang='es-ES';r.continuous=true;r.interimResults=false;
+r.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)t+=e.results[i][0].transcript+' ';t=t.trim();const n=g('nt');if(t&&n){a.note=(a.note?a.note.replace(/\s+$/,'')+' ':'')+t;a.skip=false;n.value=a.note;save()}};
+r.onerror=e=>{g('mm').textContent=(e.error==='not-allowed'||e.error==='service-not-allowed')?'La app no deja usar el micrófono dentro de esta página. Usa el micrófono 🎙 del teclado del iPhone en las notas.':'Error de dictado: '+e.error;stopRec();if(g('nt'))g('nt').focus()};
+r.onend=()=>{if(REC===r){try{r.start()}catch(x){stopRec()}}};
+REC=r;try{r.start();mc.classList.add('on');mc.textContent='⏺ Escuchando… toca para parar'}catch(x){REC=null}};
+g('sk').onclick=()=>{a.skip=true;a.note='';a.sc=null;go(1)};
+document.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>{const n=+b.dataset.sc;a.sc=a.sc===n?null:n;a.skip=false;document.querySelectorAll('[data-sc]').forEach(x=>x.classList.toggle('on',+x.dataset.sc===a.sc));save()});
+}
+if(s.t==='fin'){
+g('cp').onclick=async()=>{try{await navigator.clipboard.writeText(txt());g('cp').textContent='¡Copiado!'}catch(e){g('cp').textContent='Usa Compartir'}};
+g('tr').oninput=e=>{st.trans=e.target.value;save();archive()};
+g('d1').onclick=()=>dl(g('d1'),record(),'entrevista');
+g('dall').onclick=()=>dl(g('dall'),loadAll(),'todas');
+g('nw').onclick=()=>{st={i:0,chk:[0,0,0],meta:{},a:{},t0:Date.now()};render()};
+}}
+let REC=null;
+function stopRec(){const r=REC;REC=null;if(r){try{r.stop()}catch(e){}}const b=document.getElementById('mc');if(b){b.classList.remove('on');b.textContent='🎙 Escuchar y transcribir'}}
+const LK='entrevistas_galaxy';let MEM=[];
+function loadAll(){try{const r=JSON.parse(localStorage.getItem(LK));if(Array.isArray(r))return r}catch(e){}return MEM}
+function record(){const m=st.meta;return{id:new Date(st.t0).toISOString(),guardada:new Date().toISOString(),hora:m.hora||null,edad_aprox:m.edad||null,ocupacion:m.ocup||null,lugar:m.lugar||null,acampado:m.camp||null,duracion_seg:Math.round((Date.now()-st.t0)/1000),transcripcion_completa:st.trans||'',respuestas:steps.filter(x=>x.t==='q').map(x=>{const a=st.a[x.id]||{};return{n:SECS[x.s].n+'.'+(x.qi+1),seccion:SECS[x.s].name,pregunta:x.text,escala:a.sc==null?null:a.sc,nota:a.note||'',saltada:!!a.skip}})}}
+function archive(){const r=record(),l=loadAll().filter(x=>x.id!==r.id);l.push(r);MEM=l;try{localStorage.setItem(LK,JSON.stringify(l))}catch(e){}return l.length}
+async function dl(btn,obj,k){const t=btn.textContent,msg=$('dm');try{const d=window.claude&&await claude.use('downloads');if(!d){const b=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),x=document.createElement('a');x.href=u;x.download='galaxy-'+k+'-'+Date.now()+'.json';document.body.appendChild(x);x.click();x.remove();msg.textContent='Descargado ✓';return}const p=new Date(),f=p.getFullYear()+String(p.getMonth()+1).padStart(2,'0')+String(p.getDate()).padStart(2,'0')+'-'+String(p.getHours()).padStart(2,'0')+String(p.getMinutes()).padStart(2,'0');await d.save({filename:'galaxy-'+k+'-'+f+'.json',data:JSON.stringify(obj,null,2)});msg.textContent='Guardado ✓'}catch(e){msg.textContent=e&&e.code==='declined'?'Cancelado.':'No se pudo descargar ('+((e&&e.code)||'error')+').'}}
+function txt(){const m=st.meta;let t=`ENTREVISTA\nEdad: ${m.edad||'-'} | Ocupación: ${m.ocup||'-'} | Lugar: ${m.lugar||'-'} | Acampado: ${m.camp||'-'} | Hora: ${m.hora||'-'}\n`;
+steps.filter(x=>x.t==='q').forEach(x=>{const a=st.a[x.id]||{};t+=`\n${SECS[x.s].n}.${x.qi+1} ${x.text}\n→ ${a.skip?'(saltada)':(a.sc!=null?'['+a.sc+'/10] ':'')+(a.note||'-')}\n`});return t}
+setInterval(()=>{const e=Math.floor((Date.now()-st.t0)/1000);$('tm').textContent=st.i>0?String(Math.floor(e/60)).padStart(2,'0')+':'+String(e%60).padStart(2,'0'):''},1000);
+render();
+</script><script>if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script></body></html>
